@@ -13,5 +13,6 @@ public class SpringPMHWApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        System.out.println("SWAGGER path: http://localhost:8081/swagger-ui/index.html");
     }
 }
