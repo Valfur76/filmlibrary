@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -17,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @SequenceGenerator(name = "default_generator", sequenceName = "films_sequence", allocationSize = 1)
-public class Film{
+public class Film {
 
     @Id
     @Column(name = "id", nullable = false)
@@ -37,7 +36,13 @@ public class Film{
     @Enumerated
     private Genre genre;
 
-    @ManyToMany(mappedBy = "films")
+    @ManyToMany
+    @JoinTable(name = "films_directors",
+            joinColumns = @JoinColumn(name = "film_id"),
+            foreignKey = @ForeignKey(name = "FK_FILMS_DIRECTORS"),
+            inverseJoinColumns = @JoinColumn(name = "director_id"),
+            inverseForeignKey = @ForeignKey(name = "FK_DIRECTORS_FILMS")
+    )
     private List<Director> directors;
 
 }
