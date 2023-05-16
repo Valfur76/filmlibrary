@@ -56,7 +56,8 @@ public class User {
     private LocalDate createdWhen;
 
     @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false,
+    @JoinColumn(name = "role_id",
     foreignKey = @ForeignKey(name = "FK_USER_ROLES"))
     private Role role;
+
 }
