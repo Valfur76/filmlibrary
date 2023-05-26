@@ -33,7 +33,8 @@ public class Director{
             joinColumns = @JoinColumn(name = "director_id"),
             foreignKey = @ForeignKey(name = "FK_DIRECTORS_FILMS"),
             inverseJoinColumns = @JoinColumn(name = "film_id"),
-            inverseForeignKey = @ForeignKey(name = "FK_FILMS_DIRECTORS")
+            inverseForeignKey = @ForeignKey(name = "FK_FILMS_DIRECTORS"),
+            uniqueConstraints = @UniqueConstraint(name = "UK_FILMS_DIRECTORS", columnNames = {"director_id", "film_id"})
     )
     private List<Film> films;
 }

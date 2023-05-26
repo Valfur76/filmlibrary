@@ -1,4 +1,4 @@
-package com.bagrov.springpmhw.videorent.controller;
+package com.bagrov.springpmhw.videorent.controllers.rest;
 
 import com.bagrov.springpmhw.videorent.dto.FilmDTO;
 import com.bagrov.springpmhw.videorent.dto.UserDTO;
@@ -14,7 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 @Tag(name = "Пользователи", description = "Контроллер для работы с пользователями")
 public class UserController {
 

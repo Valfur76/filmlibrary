@@ -1,4 +1,4 @@
-package com.bagrov.springpmhw.videorent.controller;
+package com.bagrov.springpmhw.videorent.controllers.rest;
 
 import com.bagrov.springpmhw.videorent.dto.DirectorDTO;
 import com.bagrov.springpmhw.videorent.service.DirectorService;
@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 
 @RestController
-@RequestMapping("/directors")
+@RequestMapping("/api/directors")
 @Tag(name = "Режиссеры", description = "Контроллер для работы с режиссерами")
 public class DirectorController {
 

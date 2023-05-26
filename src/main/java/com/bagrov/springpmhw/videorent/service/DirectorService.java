@@ -66,8 +66,10 @@ public class DirectorService {
         Film film = filmRepository.findById(filmId)
                 .orElseThrow(() -> new NotFoundException("Фильм с указанным id не найден"));
         DirectorDTO directorDTO = getOne(directorId);
-        directorDTO.getFilmsIds().add(film.getId());
-        update(directorId, directorDTO);
+        if(!directorDTO.getFilmsIds().contains(filmId)) {
+            directorDTO.getFilmsIds().add(film.getId());
+            update(directorId, directorDTO);
+        }
         return directorDTO;
     }
 
