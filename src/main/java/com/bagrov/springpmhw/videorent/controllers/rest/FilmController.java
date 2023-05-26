@@ -1,4 +1,4 @@
-package com.bagrov.springpmhw.videorent.controller;
+package com.bagrov.springpmhw.videorent.controllers.rest;
 
 import com.bagrov.springpmhw.videorent.dto.FilmDTO;
 import com.bagrov.springpmhw.videorent.service.FilmService;
@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 
 @RestController
-@RequestMapping("/films")
+@RequestMapping("/api/films")
 @Tag(name = "Фильмы", description = "Контроллер для работы с фильмами")
 public class FilmController {
 

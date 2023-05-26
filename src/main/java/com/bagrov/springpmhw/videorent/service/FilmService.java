@@ -15,10 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,6 +38,10 @@ public class FilmService {
 
     public List<FilmDTO> findAll() {
         return filmRepository.findAll().stream().map(this::convertToFilmDTO).toList();
+    }
+
+    public List<Film> findAllFilms() {
+        return filmRepository.findAll();
     }
 
     public FilmDTO getOne(int id) {
@@ -81,6 +82,16 @@ public class FilmService {
         filmDTO.getDirectorsIds().add(director.getId());
         update(filmId, filmDTO);
         return filmDTO;
+    }
+
+    @Transactional
+    public Film addDirector(String directorsFIO, String filmTitle)  {
+        Director director = directorRepository.findByDirectorsFIO(directorsFIO);
+        Film film = filmRepository.findByTitle(filmTitle);
+        if (!film.getDirectors().contains(director)) {
+            film.getDirectors().add(director);
+        }
+        return film;
     }
 
     @Transactional

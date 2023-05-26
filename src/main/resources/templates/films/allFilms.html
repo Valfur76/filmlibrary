@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Фильмы</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>Все фильмы</h1>
+    <div class="row">
+        <div class="col">
+            <a href="films/add"
+               class="btn btn-secondary"
+               role="button"
+               style="float: right"
+               aria-disabled="true">Добавить фильм
+            </a>
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Название фильма</th>
+            <th scope="col">Год выпуска фильма</th>
+            <th scope="col">Страна выпуска фильма</th>
+            <th scope="col">Жанр</th>
+            <th scope="col">Режиссеры</th>
+            <th scope="col">Хотите добавить режиссера к фильму?</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="film : ${films}">
+            <td th:text="${film.getTitle()}"></td>
+            <td th:text="${film.getPremierYear()}"></td>
+            <td th:text="${film.getCountry()}"></td>
+            <td th:text="${film.getGenre().getGenreTextDisplay()}"></td>
+            <td>
+                <ul class="no-marker">
+                    <li th:each="dir : ${film.getDirectors()}" th:text="${dir.getDirectorsFIO()}"></li>
+                </ul>
+            </td>
+            <td>
+                <form th:object="${film}" th:action="@{/films/addDirector}" method="POST">
+                    <select name="directorsFIO">
+                        <option value="">Выберите режиссера</option>
+                        <option th:each="director : ${directors}" th:value="${director.getDirectorsFIO()}"
+                                th:text="${director.getDirectorsFIO()}"></option>
+                    </select>
+                    <input type="hidden" th:name="filmTitle" th:value="${film.getTitle()}"/>
+                    <button type="submit">Назначить</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
+
+<style>
+    .no-marker li {
+        list-style-type: none;
+    }
+</style>

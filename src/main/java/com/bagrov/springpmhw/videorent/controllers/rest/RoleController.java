@@ -1,4 +1,4 @@
-package com.bagrov.springpmhw.videorent.controller;
+package com.bagrov.springpmhw.videorent.controllers.rest;
 
 
 import com.bagrov.springpmhw.videorent.dto.RoleDTO;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/roles")
+@RequestMapping("/api/roles")
 @Tag(name = "Роли", description = "Контроллер для работы с ролями")
 public class RoleController {
 

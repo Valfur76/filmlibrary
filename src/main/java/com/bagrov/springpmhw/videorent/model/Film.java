@@ -2,10 +2,7 @@ package com.bagrov.springpmhw.videorent.model;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -41,7 +38,8 @@ public class Film {
             joinColumns = @JoinColumn(name = "film_id"),
             foreignKey = @ForeignKey(name = "FK_FILMS_DIRECTORS"),
             inverseJoinColumns = @JoinColumn(name = "director_id"),
-            inverseForeignKey = @ForeignKey(name = "FK_DIRECTORS_FILMS")
+            inverseForeignKey = @ForeignKey(name = "FK_DIRECTORS_FILMS"),
+            uniqueConstraints = @UniqueConstraint(name = "UK_FILMS_DIRECTORS", columnNames = {"film_id", "director_id"})
     )
     private List<Director> directors;
 
