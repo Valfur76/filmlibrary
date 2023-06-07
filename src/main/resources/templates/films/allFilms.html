@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
@@ -11,7 +12,7 @@
     <h1>Все фильмы</h1>
     <div class="row">
         <div class="col">
-            <a href="films/add"
+            <a sec:authorize="isAuthenticated() && (hasRole('ADMIN') || hasRole('MANAGER'))" href="films/add"
                class="btn btn-secondary"
                role="button"
                style="float: right"
@@ -27,7 +28,9 @@
             <th scope="col">Страна выпуска фильма</th>
             <th scope="col">Жанр</th>
             <th scope="col">Режиссеры</th>
-            <th scope="col">Хотите добавить режиссера к фильму?</th>
+            <th sec:authorize="isAuthenticated() && (hasRole('ADMIN') || hasRole('MANAGER'))" scope="col">Хотите
+                добавить режиссера к фильму?
+            </th>
             <th scope="col"></th>
         </tr>
         </thead>
@@ -43,7 +46,8 @@
                 </ul>
             </td>
             <td>
-                <form th:object="${film}" th:action="@{/films/addDirector}" method="POST">
+                <form sec:authorize="isAuthenticated() && (hasRole('ADMIN') || hasRole('MANAGER'))" th:object="${film}"
+                      th:action="@{/films/addDirector}" method="POST">
                     <select name="directorsFIO">
                         <option value="">Выберите режиссера</option>
                         <option th:each="director : ${directors}" th:value="${director.getDirectorsFIO()}"

@@ -3,33 +3,29 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 <head>
-  <meta charset="UTF-8">
-  <title>Добавить режиссера</title>
+    <meta charset="UTF-8">
+    <title>Добавить режиссера</title>
 </head>
 <body>
 <div layout:fragment="content">
-  <h3 class="mt-3 mb-3">Добавить режиссера</h3>
-  <form style="max-width: 50vw" method="POST" th:action="@{/directors/add}" th:object="${directorForm}">
-    <div class="mb-3">
-      <label for="directorsFIO" class="form-label">ФИО режиссера</label>
-      <!--            Название поля инпута должно строго соответствовать названию поля класса (DTO)-->
-      <input name="directorsFIO" type="text" class="form-control" id="directorsFIO">
-    </div>
-    <div class="mb-3">
-      <label for="position" class="form-label">Роль режиссера</label>
-      <input name="position" type="text" class="form-control" id="position">
-    </div>
-<!--    <div class="mb-3">-->
-<!--      <label for="genre" class="form-label">Жанр</label>-->
-<!--      <select class="form-select" name="genre" id="genre">-->
-<!--        <option selected>Выберете жанр из списка:</option>-->
-<!--        <option th:each="genre : ${T(com.bagrov.springlibraryproject.library.model.Genre).values()}"-->
-<!--                th:value="${genre}" th:text="${genre.getGenreTextDisplay()}"></option>-->
-<!--      </select>-->
-<!--    </div>-->
-    <button type="submit" class="btn btn-primary">Добавить</button>
-    <button type="button" class="btn btn-secondary" onclick="window.history.back()">Назад</button>
-  </form>
+    <h3 class="mt-3 mb-3">Добавить режиссера</h3>
+    <form enctype="multipart/form-data" class="needs-validation" novalidate style="max-width: 50vw" method="POST"
+          th:action="@{/directors/add}" th:object="${directorForm}">
+        <div class="mb-3">
+            <label for="directorsFIO" class="form-label">ФИО режиссера</label>
+            <input name="directorsFIO" type="text" class="form-control" id="directorsFIO" placeholder="ФИО режиссера"
+                   required>
+            <div class="invalid-feedback">Обязательное поле для заполнения</div>
+        </div>
+        <div class="mb-3">
+            <label for="position" class="form-label">Роль</label>
+            <input name="position" type="text" class="form-control" id="position" placeholder="Роль режиссера"
+                   required>
+            <div class="invalid-feedback">Обязательное поле для заполнения</div>
+        </div>
+        <button type="submit" class="btn btn-primary" onclick="validateForm()">Добавить</button>
+        <button type="button" class="btn btn-secondary" onclick="window.history.back()">Назад</button>
+    </form>
 </div>
 </body>
 </html>
