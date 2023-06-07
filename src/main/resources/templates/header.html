@@ -1,47 +1,60 @@
 <div xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
      th:fragment="header">
-  <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #2a2a2a">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/" style="color: #ffffff">Онлайн прокат видео фильмов</a>
-      <button
-              class="navbar-toggler"
-              type="button"
-              data-mdb-toggle="collapse"
-              data-mdb-target="#navbarExample01"
-              aria-controls="navbarExample01"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-      >
-        <i class="fas fa-bars"></i>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarExample02">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item active">
-            <a class="nav-link" aria-current="page" href="/directors" style="color: #ffffff">Режиссеры</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/films" style="color: #ffffff">Фильмы</a>
-          </li>
-        </ul>
-        <div>
-          <a class="nav-link active" style="float: right; color: #ffffff" href="/profile">Профиль</a>
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #2a2a2a">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/" style="color: #ffffff">Онлайн прокат видео фильмов</a>
+            <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-mdb-toggle="collapse"
+                    data-mdb-target="#navbarExample01"
+                    aria-controls="navbarExample01"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+            >
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarExample02">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-link">
+                        <a class="nav-link active" aria-current="page" href="/directors" style="color: #ffffff">Режиссеры</a>
+                    </li>
+                    <li class="nav-link">
+                        <a class="nav-link active" aria-current="page" href="/films" style="color: #ffffff">Фильмы</a>
+                    </li>
+                    <li sec:authorize="isAuthenticated() && hasRole('USER')" class="nav-link">
+                        <a class="nav-link active" aria-current="page" href="/my/films" style="color: #ffffff">Мои
+                            фильмы</a>
+                    </li>
+                    <li sec:authorize="isAuthenticated() && (hasRole('ADMIN') || hasRole('MANAGER'))" class="nav-link">
+                        <a class="nav-link active" aria-current="page" href="/users/list" style="color: #ffffff">Пользователи</a>
+                    </li>
+                </ul>
+                <div sec:authorize="isAuthenticated() && !hasRole('ADMIN')">
+                    <a class="nav-link active" style="float: right; color: #ffffff"
+                       th:href="'/users/profile/' + ${#authentication.getPrincipal().getId()}">Профиль</a>
+                </div>
+
+                <form sec:authorize="!isAuthenticated()" class="d-flex">
+                    <a href="/login" class="btn btn-primary" role="button" aria-disabled="true">Войти</a>
+                </form>
+                <form sec:authorize="isAuthenticated()" class="d-flex">
+                    <a href="/logout" class="btn btn-primary" role="button" aria-disabled="true">Выйти</a>
+                </form>
+            </div>
         </div>
-        <form class="d-flex">
-          <a href="/logout" class="btn btn-primary" role="button" aria-disabled="true">Выйти</a>
-        </form>
-      </div>
-    </div>
-  </nav>
-  <div
-          class="p-5 text-center bg-image"
-          style="
+    </nav>
+    <div
+            class="p-5 text-center bg-image"
+            style="
       background-image: url('https://i.imgur.com/06HNs2y.jpeg');
       height: 311px;
     "
-  >
-    <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
-      <div class="d-flex justify-content-center align-items-center h-100">
-      </div>
+    >
+        <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
+            <div class="d-flex justify-content-center align-items-center h-100">
+            </div>
+        </div>
     </div>
-  </div>
 </div>

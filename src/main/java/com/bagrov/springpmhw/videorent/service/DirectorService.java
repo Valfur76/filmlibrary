@@ -62,11 +62,11 @@ public class DirectorService {
     }
 
     @Transactional
-    public DirectorDTO addFilm(int filmId, int directorId)  {
+    public DirectorDTO addFilm(int filmId, int directorId) {
         Film film = filmRepository.findById(filmId)
                 .orElseThrow(() -> new NotFoundException("Фильм с указанным id не найден"));
         DirectorDTO directorDTO = getOne(directorId);
-        if(!directorDTO.getFilmsIds().contains(filmId)) {
+        if (!directorDTO.getFilmsIds().contains(filmId)) {
             directorDTO.getFilmsIds().add(film.getId());
             update(directorId, directorDTO);
         }
@@ -82,14 +82,14 @@ public class DirectorService {
         return modelMapper.map(director, DirectorDTO.class);
     }
 
-    private Converter<Director, DirectorDTO> postConverterToDirectorDTO()   {
+    private Converter<Director, DirectorDTO> postConverterToDirectorDTO() {
         return context -> {
             Director director = context.getSource();
             DirectorDTO directorDTO = context.getDestination();
             directorDTO.setFilmsIds(
                     Objects.isNull(director) || Objects.isNull(director.getFilms())
-                    ? Collections.emptyList()
-                    : director.getFilms().stream().map(Film::getId).collect(Collectors.toList())
+                            ? Collections.emptyList()
+                            : director.getFilms().stream().map(Film::getId).collect(Collectors.toList())
             );
             return context.getDestination();
         };
@@ -104,11 +104,11 @@ public class DirectorService {
         return modelMapper.map(directorDTO, Director.class);
     }
 
-    private Converter<DirectorDTO, Director> postConverterToDirector()   {
+    private Converter<DirectorDTO, Director> postConverterToDirector() {
         return context -> {
             DirectorDTO directorDTO = context.getSource();
             Director director = context.getDestination();
-            if (!Objects.isNull(directorDTO.getFilmsIds()))  {
+            if (!Objects.isNull(directorDTO.getFilmsIds())) {
                 director.setFilms(filmRepository.findAllById(directorDTO.getFilmsIds()));
             } else {
                 director.setFilms(Collections.emptyList());

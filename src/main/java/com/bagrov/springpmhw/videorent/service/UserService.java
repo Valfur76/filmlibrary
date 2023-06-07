@@ -3,12 +3,14 @@ package com.bagrov.springpmhw.videorent.service;
 import com.bagrov.springpmhw.videorent.dto.UserDTO;
 import com.bagrov.springpmhw.videorent.model.Film;
 import com.bagrov.springpmhw.videorent.model.Order;
+import com.bagrov.springpmhw.videorent.model.Role;
 import com.bagrov.springpmhw.videorent.model.User;
 import com.bagrov.springpmhw.videorent.repository.OrderRepository;
 import com.bagrov.springpmhw.videorent.repository.RoleRepository;
 import com.bagrov.springpmhw.videorent.repository.UserRepository;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
@@ -25,13 +27,16 @@ public class UserService {
     private final ModelMapper modelMapper;
     private final RoleRepository roleRepository;
     private final OrderRepository orderRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserService(UserRepository userRepository, ModelMapper modelMapper
-            , RoleRepository roleRepository, OrderRepository orderRepository) {
+    public UserService(UserRepository userRepository, ModelMapper modelMapper,
+                       RoleRepository roleRepository, OrderRepository orderRepository,
+                       BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.roleRepository = roleRepository;
         this.orderRepository = orderRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     public List<UserDTO> findAll() {
@@ -46,7 +51,12 @@ public class UserService {
     @Transactional
     public UserDTO save(UserDTO userDTO) {
         User newUser = convertToUser(userDTO);
+        Role role = new Role();
+        role.setId(1);
+
         newUser.setCreatedWhen(LocalDate.now());
+        newUser.setRole(role);
+        newUser.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
         return convertToUserDTO(userRepository.save(newUser));
     }
 
@@ -73,6 +83,24 @@ public class UserService {
     public List<Film> rentedFilms(int userId) {
         return orderRepository.findByUserId(userId).stream()
                 .map(Order::getFilm).toList();
+    }
+
+    public UserDTO getUserByLogin(String login) {
+        User user = userRepository.findUserByLogin(login);
+        if (user != null) {
+            return convertToUserDTO(user);
+        } else {
+            return null;
+        }
+    }
+
+    public UserDTO getUserByEmail(String email) {
+        User user = userRepository.findUserByEmail(email);
+        if (user != null) {
+            return convertToUserDTO(user);
+        } else {
+            return null;
+        }
     }
 
     private UserDTO convertToUserDTO(User user) {

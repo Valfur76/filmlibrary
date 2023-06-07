@@ -75,7 +75,7 @@ public class FilmService {
     }
 
     @Transactional
-    public FilmDTO addDirector(int directorId, int filmId)  {
+    public FilmDTO addDirector(int directorId, int filmId) {
         Director director = directorRepository.findById(directorId)
                 .orElseThrow(() -> new NotFoundException("Режиссер с указанным id не найден"));
         FilmDTO filmDTO = getOne(filmId);
@@ -85,7 +85,7 @@ public class FilmService {
     }
 
     @Transactional
-    public Film addDirector(String directorsFIO, String filmTitle)  {
+    public Film addDirector(String directorsFIO, String filmTitle) {
         Director director = directorRepository.findByDirectorsFIO(directorsFIO);
         Film film = filmRepository.findByTitle(filmTitle);
         if (!film.getDirectors().contains(director)) {
@@ -116,7 +116,7 @@ public class FilmService {
         return modelMapper.map(film, FilmDTO.class);
     }
 
-    private Converter<Film, FilmDTO> postConverterToFilmDTO()   {
+    private Converter<Film, FilmDTO> postConverterToFilmDTO() {
         return context -> {
             Film film = context.getSource();
             FilmDTO filmDTO = context.getDestination();
@@ -138,11 +138,11 @@ public class FilmService {
         return modelMapper.map(filmDTO, Film.class);
     }
 
-    private Converter<FilmDTO, Film> postConverterToFilm()   {
+    private Converter<FilmDTO, Film> postConverterToFilm() {
         return context -> {
             FilmDTO filmDTO = context.getSource();
             Film film = context.getDestination();
-            if (!Objects.isNull(filmDTO.getDirectorsIds()))  {
+            if (!Objects.isNull(filmDTO.getDirectorsIds())) {
                 film.setDirectors(directorRepository.findAllById(filmDTO.getDirectorsIds()));
             } else {
                 film.setDirectors(Collections.emptyList());

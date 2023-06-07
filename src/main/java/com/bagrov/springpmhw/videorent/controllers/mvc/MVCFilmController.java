@@ -45,14 +45,8 @@ public class MVCFilmController {
     }
 
     @PostMapping(value = "/addDirector")
-//    public String addDirector(@RequestParam(value = "directorId") int directorId,
-//                              @RequestParam(value = "filmId") int filmId,
-//                              Model model) {
-        public String addDirector(@RequestParam("filmTitle") String filmTitle,
-                                  @RequestParam("directorsFIO") String directorsFIO) {
-//        FilmDTO film = filmService.getOne(filmId);
-//        DirectorDTO director = directorService.getOne(directorId);
-//        film.getDirectors().add(director);
+    public String addDirector(@RequestParam("filmTitle") String filmTitle,
+                              @RequestParam("directorsFIO") String directorsFIO) {
         filmService.addDirector(directorsFIO, filmTitle);
         return "redirect:/films";
     }
