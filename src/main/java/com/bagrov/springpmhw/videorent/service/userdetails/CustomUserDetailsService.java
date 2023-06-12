@@ -41,13 +41,16 @@ public class CustomUserDetailsService implements UserDetailsService {
                     List.of(new SimpleGrantedAuthority("ROLE_" + ADMIN)));
         } else {
             User user = userRepository.findUserByLogin(username);
-            List<GrantedAuthority> authorities = new ArrayList<>();
-            authorities.add(new SimpleGrantedAuthority(
-                    user.getRole().getId() == 1
-                            ? "ROLE_" + USER
-                            : "ROLE_" + MANAGER));
-            System.out.println(authorities);
-            return new CustomUserDetails(user.getId(), username, user.getPassword(), authorities);
+            if (user != null) {
+                List<GrantedAuthority> authorities = new ArrayList<>();
+                authorities.add(new SimpleGrantedAuthority(
+                        user.getRole().getId() == 1
+                                ? "ROLE_" + USER
+                                : "ROLE_" + MANAGER));
+                return new CustomUserDetails(user.getId(), username, user.getPassword(), authorities);
+            } else {
+                throw new UsernameNotFoundException("Username not found");
+            }
         }
     }
 }

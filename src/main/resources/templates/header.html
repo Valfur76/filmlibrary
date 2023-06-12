@@ -24,13 +24,16 @@
                         <a class="nav-link active" aria-current="page" href="/films" style="color: #ffffff">Фильмы</a>
                     </li>
                     <li sec:authorize="isAuthenticated() && hasRole('USER')" class="nav-link">
-                        <a class="nav-link active" aria-current="page" href="/my/films" style="color: #ffffff">Мои
-                            фильмы</a>
+                        <a class="nav-link active" aria-current="page" th:href="'/order/user-films/'
+                         + ${#authentication.getPrincipal().getId()}" style="color: #ffffff">Мои фильмы</a>
                     </li>
-                    <li sec:authorize="isAuthenticated() && (hasRole('ADMIN') || hasRole('MANAGER'))" class="nav-link">
-                        <a class="nav-link active" aria-current="page" href="/users/list" style="color: #ffffff">Пользователи</a>
+                    <li sec:authorize="isAuthenticated() && hasRole('ADMIN')" class="nav-link">
+                        <a class="nav-link active" aria-current="page" href="/users" style="color: #ffffff">Пользователи</a>
                     </li>
                 </ul>
+                <form class="d-flex" sec:authorize="isAuthenticated()">
+                    <span th:text="${#authentication.getPrincipal().getUsername()}"></span>
+                </form>
                 <div sec:authorize="isAuthenticated() && !hasRole('ADMIN')">
                     <a class="nav-link active" style="float: right; color: #ffffff"
                        th:href="'/users/profile/' + ${#authentication.getPrincipal().getId()}">Профиль</a>

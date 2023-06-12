@@ -3,6 +3,7 @@ package com.bagrov.springpmhw.videorent.controllers.rest;
 import com.bagrov.springpmhw.videorent.dto.FilmDTO;
 import com.bagrov.springpmhw.videorent.service.FilmService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/films")
+@SecurityRequirement(name = "Bearer Authentication")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Tag(name = "Фильмы", description = "Контроллер для работы с фильмами")
 public class FilmController {
 
@@ -67,10 +70,10 @@ public class FilmController {
     }
 
     @Operation(description = "Арендовать фильм")
-    @PostMapping(value = "/{id}/rentFilm")
-    public void rentFilm(@PathVariable("id") int id,
+    @PostMapping(value = "/{id}/orderFilm")
+    public void orderFilm(@PathVariable("id") int id,
                          @RequestParam(value = "userId") int userId,
                          @RequestParam(value = "rentPeriod") int rentPeriod) {
-        filmService.rentFilm(id, userId, rentPeriod);
+        filmService.orderFilm(id, userId, rentPeriod);
     }
 }

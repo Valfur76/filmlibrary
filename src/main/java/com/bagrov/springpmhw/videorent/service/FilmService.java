@@ -10,6 +10,9 @@ import com.bagrov.springpmhw.videorent.repository.OrderRepository;
 import com.bagrov.springpmhw.videorent.repository.UserRepository;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
@@ -26,14 +29,20 @@ public class FilmService {
     private final DirectorRepository directorRepository;
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
+    private final DirectorService directorService;
 
-    public FilmService(FilmRepository filmRepository, ModelMapper modelMapper
-            , DirectorRepository directorRepository, UserRepository userRepository, OrderRepository orderRepository) {
+    public FilmService(FilmRepository filmRepository,
+                       ModelMapper modelMapper,
+                       DirectorRepository directorRepository,
+                       UserRepository userRepository,
+                       OrderRepository orderRepository,
+                       DirectorService directorService) {
         this.filmRepository = filmRepository;
         this.modelMapper = modelMapper;
         this.directorRepository = directorRepository;
         this.userRepository = userRepository;
         this.orderRepository = orderRepository;
+        this.directorService = directorService;
     }
 
     public List<FilmDTO> findAll() {
@@ -42,6 +51,12 @@ public class FilmService {
 
     public List<Film> findAllFilms() {
         return filmRepository.findAll();
+    }
+
+    public Page<FilmDTO> findAllFilms(Pageable pageable) {
+        Page<Film> filmsPaginated = filmRepository.findAll(pageable);
+        List<FilmDTO> result = filmsPaginated.getContent().stream().map(this::convertToFilmDTO).toList();
+        return new PageImpl<>(result, pageable, filmsPaginated.getTotalElements());
     }
 
     public FilmDTO getOne(int id) {
@@ -95,7 +110,7 @@ public class FilmService {
     }
 
     @Transactional
-    public void rentFilm(int filmId, int userId, int rentPeriod) {
+    public void orderFilm(int filmId, int userId, int rentPeriod) {
         Order order = new Order();
         order.setUser(userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь с указанным id не найден")));
@@ -110,7 +125,11 @@ public class FilmService {
     public FilmDTO convertToFilmDTO(Film film) {
         if (modelMapper.getTypeMap(Film.class, FilmDTO.class) == null) {
             modelMapper.createTypeMap(Film.class, FilmDTO.class)
-                    .addMappings(mapper -> mapper.skip(FilmDTO::setDirectorsIds))
+                    .addMappings(
+                            mapper -> {
+                                mapper.skip(FilmDTO::setDirectorsIds);
+                                mapper.skip(FilmDTO::setDirectorsDTO);
+                            })
                     .setPostConverter(postConverterToFilmDTO());
         }
         return modelMapper.map(film, FilmDTO.class);
@@ -124,6 +143,11 @@ public class FilmService {
                     Objects.isNull(film) || Objects.isNull(film.getDirectors())
                             ? Collections.emptyList()
                             : film.getDirectors().stream().map(Director::getId).collect(Collectors.toList())
+            );
+            filmDTO.setDirectorsDTO(
+                    Objects.isNull(film) || Objects.isNull(film.getDirectors())
+                            ? Collections.emptyList()
+                            : film.getDirectors().stream().map(directorService::convertToDirectorDTO).collect(Collectors.toList())
             );
             return context.getDestination();
         };

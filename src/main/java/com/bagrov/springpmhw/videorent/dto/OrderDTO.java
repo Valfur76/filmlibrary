@@ -12,6 +12,7 @@ public class OrderDTO {
     private int userId;
     private int filmId;
     private LocalDateTime rentDate;
-    private int rentPeriod;
+    private Integer rentPeriod;
     private boolean purchase;
+    private FilmDTO filmDTO;
 }

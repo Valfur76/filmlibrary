@@ -3,6 +3,7 @@ package com.bagrov.springpmhw.videorent.controllers.rest;
 import com.bagrov.springpmhw.videorent.dto.DirectorDTO;
 import com.bagrov.springpmhw.videorent.service.DirectorService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/directors")
+@SecurityRequirement(name = "Bearer Authentication")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Tag(name = "Режиссеры", description = "Контроллер для работы с режиссерами")
 public class DirectorController {
 

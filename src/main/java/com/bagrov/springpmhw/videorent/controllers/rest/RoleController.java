@@ -4,6 +4,7 @@ package com.bagrov.springpmhw.videorent.controllers.rest;
 import com.bagrov.springpmhw.videorent.dto.RoleDTO;
 import com.bagrov.springpmhw.videorent.service.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,6 +15,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/roles")
+@SecurityRequirement(name = "Bearer Authentication")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Tag(name = "Роли", description = "Контроллер для работы с ролями")
 public class RoleController {
 
