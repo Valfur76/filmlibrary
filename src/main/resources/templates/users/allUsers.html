@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Пользователи</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>Все пользователи</h1>
+    <div sec:authorize="isAuthenticated() && hasRole('ADMIN')">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Логин</th>
+                <th scope="col">Имя</th>
+                <th scope="col">Фамилия</th>
+                <th scope="col">Отчество</th>
+                <th scope="col">Дата рождения</th>
+                <th scope="col">Телефон</th>
+                <th scope="col">Адрес</th>
+                <th scope="col">Электронная почта</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.getLogin()}"></td>
+                <td th:text="${user.getFirstName()}"></td>
+                <td th:text="${user.getLastName}"></td>
+                <td th:text="${user.getMiddleName()}"></td>
+                <td th:text="${#temporals.format(user.getBirthDate(), 'dd-MM-yyyy')}"></td>
+                <td th:text="${user.getPhone()}"></td>
+                <td th:text="${user.getAddress}"></td>
+                <td th:text="${user.getEmail}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <nav aria-label="Pagination" th:if="${users.totalPages gt 0}">
+            <ul class="pagination justify-content-center font-weight-bold">
+                <li class="page-item" th:classappend="${users.number eq 0} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/users?page={id}(id=${users.number lt 2 ? 1 : films.number})}"
+                       aria-label="Previous" title="Previous Page" data-toggle="tooltip">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item" th:classappend="${i eq users.number + 1} ? 'active'"
+                    th:each="i : ${#numbers.sequence( 1, users.totalPages, 1)}">
+                    <a class="page-link" th:href="@{/users?page={id}(id=${i})}" th:text="${i}"
+                       th:title="${'Page '+ i}" data-toggle="tooltip"></a>
+                </li>
+                <li class="page-item" th:classappend="${users.number eq users.totalPages - 1} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/users?page={id}(id=${users.number + 2})}"
+                       aria-label="Next" title="Next Page" data-toggle="tooltip">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+</body>
+</html>
+
+<style>
+    .no-marker li {
+        list-style-type: none;
+    }
+</style>

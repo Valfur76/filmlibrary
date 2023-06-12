@@ -73,7 +73,7 @@ public class DirectorService {
         return directorDTO;
     }
 
-    private DirectorDTO convertToDirectorDTO(Director director) {
+    public DirectorDTO convertToDirectorDTO(Director director) {
         if (modelMapper.getTypeMap(Director.class, DirectorDTO.class) == null) {
             modelMapper.createTypeMap(Director.class, DirectorDTO.class)
                     .addMappings(mapper -> mapper.skip(DirectorDTO::setFilmsIds))

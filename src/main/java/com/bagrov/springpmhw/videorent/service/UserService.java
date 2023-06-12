@@ -10,6 +10,10 @@ import com.bagrov.springpmhw.videorent.repository.RoleRepository;
 import com.bagrov.springpmhw.videorent.repository.UserRepository;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +45,12 @@ public class UserService {
 
     public List<UserDTO> findAll() {
         return userRepository.findAll().stream().map(this::convertToUserDTO).toList();
+    }
+
+    public Page<UserDTO> findAllUsers(Pageable pageable) {
+        Page<User> usersPaginated = userRepository.findAll(pageable);
+        List<UserDTO> result = usersPaginated.getContent().stream().map(this::convertToUserDTO).toList();
+        return new PageImpl<>(result, pageable, usersPaginated.getTotalElements());
     }
 
     public UserDTO getOne(int id) {
@@ -101,6 +111,10 @@ public class UserService {
         } else {
             return null;
         }
+    }
+
+    public boolean checkPassword(String password, UserDetails foundUser) {
+        return bCryptPasswordEncoder.matches(password, foundUser.getPassword());
     }
 
     private UserDTO convertToUserDTO(User user) {

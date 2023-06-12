@@ -1,9 +1,13 @@
 package com.bagrov.springpmhw.videorent.service.userdetails;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CustomUserDetails implements UserDetails {
 
@@ -64,5 +68,25 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    @Override
+    public String toString() {
+        ObjectMapper mapper = new ObjectMapper();
+        try{
+            return mapper.writeValueAsString(getFieldsToInclude());
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return super.toString();
+    }
+
+    private Object getFieldsToInclude() {
+        Map<String, Object> fields = new HashMap<>();
+        fields.put("id", id);
+        fields.put("username", username);
+        fields.put("password", password);
+        fields.put("role", authorities);
+        return fields;
     }
 }

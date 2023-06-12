@@ -42,7 +42,8 @@
             <td th:text="${film.getGenre().getGenreTextDisplay()}"></td>
             <td>
                 <ul class="no-marker">
-                    <li th:each="dir : ${film.getDirectors()}" th:text="${dir.getDirectorsFIO()}"></li>
+                    <!--                    <li th:each="dir : ${film.getDirectors()}" th:text="${dir.getDirectorsFIO()}"></li>-->
+                    <li th:each="dir : ${film.getDirectorsDTO()}" th:text="${dir.getDirectorsFIO()}"></li>
                 </ul>
             </td>
             <td>
@@ -56,10 +57,37 @@
                     <input type="hidden" th:name="filmTitle" th:value="${film.getTitle()}"/>
                     <button type="submit">Назначить</button>
                 </form>
+                <a sec:authorize="hasRole('USER')" class="btn btn-sm btn-outline-success"
+                   th:href="'/order/film/' + ${film.id}">Арендовать фильм</a>
             </td>
         </tr>
         </tbody>
     </table>
+    <div>
+        <nav aria-label="Pagination" th:if="${films.totalPages gt 0}">
+            <ul class="pagination justify-content-center font-weight-bold">
+                <li class="page-item" th:classappend="${films.number eq 0} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/films?page={id}(id=${films.number lt 2 ? 1 : films.number})}"
+                       aria-label="Previous" title="Previous Page" data-toggle="tooltip">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item" th:classappend="${i eq films.number + 1} ? 'active'"
+                    th:each="i : ${#numbers.sequence( 1, films.totalPages, 1)}">
+                    <a class="page-link" th:href="@{/films?page={id}(id=${i})}" th:text="${i}"
+                       th:title="${'Page '+ i}" data-toggle="tooltip"></a>
+                </li>
+                <li class="page-item" th:classappend="${films.number eq films.totalPages - 1} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/films?page={id}(id=${films.number + 2})}"
+                       aria-label="Next" title="Next Page" data-toggle="tooltip">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 </div>
 </body>
 </html>

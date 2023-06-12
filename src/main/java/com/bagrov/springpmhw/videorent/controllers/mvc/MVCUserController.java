@@ -2,6 +2,9 @@ package com.bagrov.springpmhw.videorent.controllers.mvc;
 
 import com.bagrov.springpmhw.videorent.dto.UserDTO;
 import com.bagrov.springpmhw.videorent.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,6 +40,39 @@ public class MVCUserController {
             return "users/registration";
         }
         userService.save(userDTO);
-        return "redirect:login";
+        return "redirect:/login";
+    }
+
+    @GetMapping
+    public String getAllUsers(Model model,
+                              @RequestParam(value = "page", defaultValue = "1") int page,
+                              @RequestParam(value = "size", defaultValue = "5") int pageSize) {
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.ASC, "id"));
+        Page<UserDTO> users = userService.findAllUsers(pageRequest);
+        model.addAttribute("users", users);
+        return "users/allUsers";
+    }
+
+    @GetMapping("/profile/{id}")
+    public String userInfo(@PathVariable int id,
+                            Model model) {
+        UserDTO userDTO = userService.getOne(id);
+        model.addAttribute("user", userDTO);
+        return "users/profile";
+    }
+
+    @GetMapping("/profile/{id}/edit")
+    public String editUser(@PathVariable int id,
+                           Model model) {
+        UserDTO userDTO = userService.getOne(id);
+        model.addAttribute("user", userDTO);
+        return "users/edit";
+    }
+
+    @PostMapping("/profile/{id}/edit")
+    public String editUser(@PathVariable int id,
+                                 @ModelAttribute("editForm") UserDTO userDTO) {
+        userService.update(id, userDTO);
+        return "redirect:/users/profile/{id}";
     }
 }
